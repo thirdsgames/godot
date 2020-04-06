@@ -750,6 +750,19 @@ void RasterizerSceneGLES2::environment_set_camera_feed_id(RID p_env, int p_camer
 	env->camera_feed_id = p_camera_feed_id;
 }
 
+void RasterizerSceneGLES2::environment_set_mirror_vertex0(RID p_env, Vector3 p_mirror_vertex0) {
+	// Do nothing
+}
+void RasterizerSceneGLES2::environment_set_mirror_vertex1(RID p_env, Vector3 p_mirror_vertex0) {
+	// Do nothing
+}
+void RasterizerSceneGLES2::environment_set_mirror_vertex2(RID p_env, Vector3 p_mirror_vertex0) {
+	// Do nothing
+}
+void RasterizerSceneGLES2::environment_set_mirror_vertex3(RID p_env, Vector3 p_mirror_vertex0) {
+	// Do nothing
+}
+
 void RasterizerSceneGLES2::environment_set_dof_blur_far(RID p_env, bool p_enable, float p_distance, float p_transition, float p_amount, VS::EnvironmentDOFBlurQuality p_quality) {
 
 	Environment *env = environment_owner.getornull(p_env);

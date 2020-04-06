@@ -180,6 +180,12 @@ public:
 		GLuint omni_array_ubo;
 		GLuint reflection_array_ubo;
 
+		//this is a std140 compatible struct. Please read the OpenGL 3.3 Specification spec before doing any changes
+		struct UniformVector {
+			float x, y, z, _;
+		} mirror_vertices[4];
+		GLuint mirror_vertices_ubo;
+
 		GLuint immediate_buffer;
 		GLuint immediate_array;
 
@@ -378,6 +384,11 @@ public:
 
 		int camera_feed_id;
 
+		Vector3 mirror_vertex0;
+		Vector3 mirror_vertex1;
+		Vector3 mirror_vertex2;
+		Vector3 mirror_vertex3;
+
 		Color ambient_color;
 		float ambient_energy;
 		float ambient_sky_contribution;
@@ -546,6 +557,11 @@ public:
 	virtual void environment_set_canvas_max_layer(RID p_env, int p_max_layer);
 	virtual void environment_set_ambient_light(RID p_env, const Color &p_color, float p_energy = 1.0, float p_sky_contribution = 0.0);
 	virtual void environment_set_camera_feed_id(RID p_env, int p_camera_feed_id);
+
+	virtual void environment_set_mirror_vertex0(RID p_env, Vector3 p_mirror_vertex0);
+	virtual void environment_set_mirror_vertex1(RID p_env, Vector3 p_mirror_vertex1);
+	virtual void environment_set_mirror_vertex2(RID p_env, Vector3 p_mirror_vertex2);
+	virtual void environment_set_mirror_vertex3(RID p_env, Vector3 p_mirror_vertex3);
 
 	virtual void environment_set_dof_blur_near(RID p_env, bool p_enable, float p_distance, float p_transition, float p_amount, VS::EnvironmentDOFBlurQuality p_quality);
 	virtual void environment_set_dof_blur_far(RID p_env, bool p_enable, float p_distance, float p_transition, float p_amount, VS::EnvironmentDOFBlurQuality p_quality);

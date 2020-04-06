@@ -101,6 +101,11 @@ private:
 	float ambient_sky_contribution;
 	int camera_feed_id;
 
+	Vector3 mirror_vertex0;
+	Vector3 mirror_vertex1;
+	Vector3 mirror_vertex2;
+	Vector3 mirror_vertex3;
+
 	ToneMapper tone_mapper;
 	float tonemap_exposure;
 	float tonemap_white;
@@ -209,6 +214,15 @@ public:
 	float get_ambient_light_energy() const;
 	float get_ambient_light_sky_contribution() const;
 	int get_camera_feed_id(void) const;
+
+	void set_mirror_vertex0(Vector3 p_mirror_vertex0);
+	Vector3 get_mirror_vertex0() const;
+	void set_mirror_vertex1(Vector3 p_mirror_vertex1);
+	Vector3 get_mirror_vertex1() const;
+	void set_mirror_vertex2(Vector3 p_mirror_vertex2);
+	Vector3 get_mirror_vertex2() const;
+	void set_mirror_vertex3(Vector3 p_mirror_vertex3);
+	Vector3 get_mirror_vertex3() const;
 
 	void set_tonemapper(ToneMapper p_tone_mapper);
 	ToneMapper get_tonemapper() const;

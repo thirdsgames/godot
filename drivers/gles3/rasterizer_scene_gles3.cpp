@@ -838,6 +838,34 @@ void RasterizerSceneGLES3::environment_set_camera_feed_id(RID p_env, int p_camer
 	env->camera_feed_id = p_camera_feed_id;
 }
 
+void RasterizerSceneGLES3::environment_set_mirror_vertex0(RID p_env, Vector3 p_mirror_vertex0) {
+	Environment *env = environment_owner.getornull(p_env);
+	ERR_FAIL_COND(!env);
+
+	env->mirror_vertex0 = p_mirror_vertex0;
+}
+
+void RasterizerSceneGLES3::environment_set_mirror_vertex1(RID p_env, Vector3 p_mirror_vertex1) {
+	Environment *env = environment_owner.getornull(p_env);
+	ERR_FAIL_COND(!env);
+
+	env->mirror_vertex1 = p_mirror_vertex1;
+}
+
+void RasterizerSceneGLES3::environment_set_mirror_vertex2(RID p_env, Vector3 p_mirror_vertex2) {
+	Environment *env = environment_owner.getornull(p_env);
+	ERR_FAIL_COND(!env);
+
+	env->mirror_vertex2 = p_mirror_vertex2;
+}
+
+void RasterizerSceneGLES3::environment_set_mirror_vertex3(RID p_env, Vector3 p_mirror_vertex3) {
+	Environment *env = environment_owner.getornull(p_env);
+	ERR_FAIL_COND(!env);
+
+	env->mirror_vertex3 = p_mirror_vertex3;
+}
+
 void RasterizerSceneGLES3::environment_set_dof_blur_far(RID p_env, bool p_enable, float p_distance, float p_transition, float p_amount, VS::EnvironmentDOFBlurQuality p_quality) {
 
 	Environment *env = environment_owner.getornull(p_env);
@@ -1975,6 +2003,7 @@ void RasterizerSceneGLES3::_set_cull(bool p_front, bool p_disabled, bool p_rever
 void RasterizerSceneGLES3::_render_list(RenderList::Element **p_elements, int p_element_count, const Transform &p_view_transform, const CameraMatrix &p_projection, RasterizerStorageGLES3::Sky *p_sky, bool p_reverse_cull, bool p_alpha_pass, bool p_shadow, bool p_directional_add, bool p_directional_shadows) {
 
 	glBindBufferBase(GL_UNIFORM_BUFFER, 0, state.scene_ubo); //bind globals ubo
+	glBindBufferBase(GL_UNIFORM_BUFFER, 7, state.mirror_vertices_ubo); //bind mirror plane ubo
 
 	bool use_radiance_map = false;
 	if (!p_shadow && !p_directional_add) {
@@ -2618,6 +2647,20 @@ void RasterizerSceneGLES3::_setup_environment(Environment *env, const CameraMatr
 		state.ubo_data.fog_height_max = env->fog_height_max;
 		state.ubo_data.fog_height_curve = env->fog_height_curve;
 
+		state.mirror_vertices[0].x = env->mirror_vertex0.x;
+		state.mirror_vertices[0].y = env->mirror_vertex0.y;
+		state.mirror_vertices[0].z = env->mirror_vertex0.z;
+		state.mirror_vertices[1].x = env->mirror_vertex1.x;
+		state.mirror_vertices[1].y = env->mirror_vertex1.y;
+		state.mirror_vertices[1].z = env->mirror_vertex1.z;
+		state.mirror_vertices[2].x = env->mirror_vertex2.x;
+		state.mirror_vertices[2].y = env->mirror_vertex2.y;
+		state.mirror_vertices[2].z = env->mirror_vertex2.z;
+		state.mirror_vertices[3].x = env->mirror_vertex3.x;
+		state.mirror_vertices[3].y = env->mirror_vertex3.y;
+		state.mirror_vertices[3].z = env->mirror_vertex3.z;
+		//printf("Mirror: %f %f %f\n", env->mirror_vertex0.x, env->mirror_vertex0.y, env->mirror_vertex0.z);
+
 	} else {
 		state.ubo_data.bg_energy = 1.0;
 		state.ubo_data.ambient_energy = 1.0;
@@ -2661,6 +2704,11 @@ void RasterizerSceneGLES3::_setup_environment(Environment *env, const CameraMatr
 
 	glBindBuffer(GL_UNIFORM_BUFFER, state.env_radiance_ubo);
 	glBufferData(GL_UNIFORM_BUFFER, sizeof(State::EnvironmentRadianceUBO), &state.env_radiance_data, GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+	//update mirror planes
+	glBindBuffer(GL_UNIFORM_BUFFER, state.mirror_vertices_ubo);
+	glBufferData(GL_UNIFORM_BUFFER, sizeof(state.mirror_vertices), &state.mirror_vertices, GL_DYNAMIC_DRAW);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
@@ -5026,6 +5074,11 @@ void RasterizerSceneGLES3::initialize() {
 	glGenBuffers(1, &state.env_radiance_ubo);
 	glBindBuffer(GL_UNIFORM_BUFFER, state.env_radiance_ubo);
 	glBufferData(GL_UNIFORM_BUFFER, sizeof(State::EnvironmentRadianceUBO), &state.env_radiance_ubo, GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+	glGenBuffers(1, &state.mirror_vertices_ubo);
+	glBindBuffer(GL_UNIFORM_BUFFER, state.mirror_vertices_ubo);
+	glBufferData(GL_UNIFORM_BUFFER, sizeof(state.mirror_vertices_ubo), &state.mirror_vertices, GL_DYNAMIC_DRAW);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 	render_list.max_elements = GLOBAL_DEF_RST("rendering/limits/rendering/max_renderable_elements", (int)RenderList::DEFAULT_MAX_ELEMENTS);

@@ -729,6 +729,11 @@ public:
 	virtual void environment_set_ambient_light(RID p_env, const Color &p_color, float p_energy = 1.0, float p_sky_contribution = 0.0) = 0;
 	virtual void environment_set_camera_feed_id(RID p_env, int p_camera_feed_id) = 0;
 
+	virtual void environment_set_mirror_vertex0(RID p_env, Vector3 mirror_vertex0) = 0;
+	virtual void environment_set_mirror_vertex1(RID p_env, Vector3 mirror_vertex1) = 0;
+	virtual void environment_set_mirror_vertex2(RID p_env, Vector3 mirror_vertex2) = 0;
+	virtual void environment_set_mirror_vertex3(RID p_env, Vector3 mirror_vertex3) = 0;
+
 	//set default SSAO options
 	//set default SSR options
 	//set default SSSSS options

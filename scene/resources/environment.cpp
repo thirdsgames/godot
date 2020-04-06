@@ -175,6 +175,46 @@ int Environment::get_camera_feed_id(void) const {
 	return camera_feed_id;
 }
 
+void Environment::set_mirror_vertex0(Vector3 p_mirror_vertex0) {
+	mirror_vertex0 = p_mirror_vertex0;
+	VS::get_singleton()->environment_set_mirror_vertex0(environment, p_mirror_vertex0);
+}
+
+Vector3 Environment::get_mirror_vertex0() const {
+
+	return mirror_vertex0;
+}
+
+void Environment::set_mirror_vertex1(Vector3 p_mirror_vertex1) {
+	mirror_vertex1 = p_mirror_vertex1;
+	VS::get_singleton()->environment_set_mirror_vertex1(environment, p_mirror_vertex1);
+}
+
+Vector3 Environment::get_mirror_vertex1() const {
+
+	return mirror_vertex1;
+}
+
+void Environment::set_mirror_vertex2(Vector3 p_mirror_vertex2) {
+	mirror_vertex2 = p_mirror_vertex2;
+	VS::get_singleton()->environment_set_mirror_vertex2(environment, p_mirror_vertex2);
+}
+
+Vector3 Environment::get_mirror_vertex2() const {
+
+	return mirror_vertex2;
+}
+
+void Environment::set_mirror_vertex3(Vector3 p_mirror_vertex3) {
+	mirror_vertex3 = p_mirror_vertex3;
+	VS::get_singleton()->environment_set_mirror_vertex3(environment, p_mirror_vertex3);
+}
+
+Vector3 Environment::get_mirror_vertex3() const {
+
+	return mirror_vertex3;
+}
+
 void Environment::set_tonemapper(ToneMapper p_tone_mapper) {
 
 	tone_mapper = p_tone_mapper;
@@ -958,6 +998,10 @@ void Environment::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_ambient_light_energy", "energy"), &Environment::set_ambient_light_energy);
 	ClassDB::bind_method(D_METHOD("set_ambient_light_sky_contribution", "energy"), &Environment::set_ambient_light_sky_contribution);
 	ClassDB::bind_method(D_METHOD("set_camera_feed_id", "camera_feed_id"), &Environment::set_camera_feed_id);
+	ClassDB::bind_method(D_METHOD("set_mirror_vertex0", "mirror_vertex0"), &Environment::set_mirror_vertex0);
+	ClassDB::bind_method(D_METHOD("set_mirror_vertex1", "mirror_vertex1"), &Environment::set_mirror_vertex1);
+	ClassDB::bind_method(D_METHOD("set_mirror_vertex2", "mirror_vertex2"), &Environment::set_mirror_vertex2);
+	ClassDB::bind_method(D_METHOD("set_mirror_vertex3", "mirror_vertex3"), &Environment::set_mirror_vertex3);
 
 	ClassDB::bind_method(D_METHOD("get_background"), &Environment::get_background);
 	ClassDB::bind_method(D_METHOD("get_sky"), &Environment::get_sky);
@@ -972,6 +1016,10 @@ void Environment::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_ambient_light_energy"), &Environment::get_ambient_light_energy);
 	ClassDB::bind_method(D_METHOD("get_ambient_light_sky_contribution"), &Environment::get_ambient_light_sky_contribution);
 	ClassDB::bind_method(D_METHOD("get_camera_feed_id"), &Environment::get_camera_feed_id);
+	ClassDB::bind_method(D_METHOD("get_mirror_vertex0"), &Environment::get_mirror_vertex0);
+	ClassDB::bind_method(D_METHOD("get_mirror_vertex1"), &Environment::get_mirror_vertex1);
+	ClassDB::bind_method(D_METHOD("get_mirror_vertex2"), &Environment::get_mirror_vertex2);
+	ClassDB::bind_method(D_METHOD("get_mirror_vertex3"), &Environment::get_mirror_vertex3);
 
 	ADD_GROUP("Background", "background_");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "background_mode", PROPERTY_HINT_ENUM, "Clear Color,Custom Color,Sky,Color+Sky,Canvas,Keep,Camera Feed"), "set_background", "get_background");
@@ -990,6 +1038,11 @@ void Environment::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::COLOR, "ambient_light_color"), "set_ambient_light_color", "get_ambient_light_color");
 	ADD_PROPERTY(PropertyInfo(Variant::REAL, "ambient_light_energy", PROPERTY_HINT_RANGE, "0,16,0.01"), "set_ambient_light_energy", "get_ambient_light_energy");
 	ADD_PROPERTY(PropertyInfo(Variant::REAL, "ambient_light_sky_contribution", PROPERTY_HINT_RANGE, "0,1,0.01"), "set_ambient_light_sky_contribution", "get_ambient_light_sky_contribution");
+	ADD_GROUP("Mirrors", "mirror_");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "mirror_vertex0", PROPERTY_HINT_NONE), "set_mirror_vertex0", "get_mirror_vertex0");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "mirror_vertex1", PROPERTY_HINT_NONE), "set_mirror_vertex1", "get_mirror_vertex1");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "mirror_vertex2", PROPERTY_HINT_NONE), "set_mirror_vertex2", "get_mirror_vertex2");
+	ADD_PROPERTY(PropertyInfo(Variant::VECTOR3, "mirror_vertex3", PROPERTY_HINT_NONE), "set_mirror_vertex3", "get_mirror_vertex3");
 
 	ClassDB::bind_method(D_METHOD("set_fog_enabled", "enabled"), &Environment::set_fog_enabled);
 	ClassDB::bind_method(D_METHOD("is_fog_enabled"), &Environment::is_fog_enabled);

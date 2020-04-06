@@ -1017,7 +1017,7 @@ void Octree<T, use_pairs, AL>::_cull_convex(Octant *p_octant, _CullConvexData *p
 				continue;
 			e->last_pass = pass;
 
-			if (e->aabb.intersects_convex_shape(p_cull->planes, p_cull->plane_count)) {
+			if (true || e->aabb.intersects_convex_shape(p_cull->planes, p_cull->plane_count)) {  // THIRDS for now, disable frustum culling
 
 				if (*p_cull->result_idx < p_cull->result_max) {
 					p_cull->result_array[*p_cull->result_idx] = e->userdata;
@@ -1043,7 +1043,7 @@ void Octree<T, use_pairs, AL>::_cull_convex(Octant *p_octant, _CullConvexData *p
 				continue;
 			e->last_pass = pass;
 
-			if (e->aabb.intersects_convex_shape(p_cull->planes, p_cull->plane_count)) {
+			if (true || e->aabb.intersects_convex_shape(p_cull->planes, p_cull->plane_count)) { // THIRDS for now, disable frustum culling
 
 				if (*p_cull->result_idx < p_cull->result_max) {
 
@@ -1059,7 +1059,7 @@ void Octree<T, use_pairs, AL>::_cull_convex(Octant *p_octant, _CullConvexData *p
 
 	for (int i = 0; i < 8; i++) {
 
-		if (p_octant->children[i] && p_octant->children[i]->aabb.intersects_convex_shape(p_cull->planes, p_cull->plane_count)) {
+		if (p_octant->children[i] && (true || p_octant->children[i]->aabb.intersects_convex_shape(p_cull->planes, p_cull->plane_count))) {  // THIRDS for now, disable frustum culling
 			_cull_convex(p_octant->children[i], p_cull);
 		}
 	}

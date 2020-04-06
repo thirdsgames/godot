@@ -473,6 +473,11 @@ public:
 	virtual void environment_set_ambient_light(RID p_env, const Color &p_color, float p_energy = 1.0, float p_sky_contribution = 0.0);
 	virtual void environment_set_camera_feed_id(RID p_env, int p_camera_feed_id);
 
+	virtual void environment_set_mirror_vertex0(RID p_env, Vector3 p_mirror_vertex0);
+	virtual void environment_set_mirror_vertex1(RID p_env, Vector3 p_mirror_vertex1);
+	virtual void environment_set_mirror_vertex2(RID p_env, Vector3 p_mirror_vertex2);
+	virtual void environment_set_mirror_vertex3(RID p_env, Vector3 p_mirror_vertex3);
+
 	virtual void environment_set_dof_blur_near(RID p_env, bool p_enable, float p_distance, float p_transition, float p_amount, VS::EnvironmentDOFBlurQuality p_quality);
 	virtual void environment_set_dof_blur_far(RID p_env, bool p_enable, float p_distance, float p_transition, float p_amount, VS::EnvironmentDOFBlurQuality p_quality);
 	virtual void environment_set_glow(RID p_env, bool p_enable, int p_level_flags, float p_intensity, float p_strength, float p_bloom_threshold, VS::EnvironmentGlowBlendMode p_blend_mode, float p_hdr_bleed_threshold, float p_hdr_bleed_scale, float p_hdr_luminance_cap, bool p_bicubic_upscale);

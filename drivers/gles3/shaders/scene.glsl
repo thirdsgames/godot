@@ -1,6 +1,9 @@
 /* clang-format off */
 [vertex]
 
+out vec4 m_worldpos;
+flat out float m_inmirror;
+
 #define M_PI 3.14159265359
 
 #define SHADER_IS_SRGB false
@@ -350,6 +353,7 @@ void main() {
 	uv2_interp = uv2_attrib;
 #endif
 
+#define OVERRIDE_POSITION
 #ifdef OVERRIDE_POSITION
 	highp vec4 position;
 #endif
@@ -437,6 +441,15 @@ void main() {
 	highp mat4 modelview = camera_inverse_matrix * world_matrix;
 	{
 		/* clang-format off */
+
+	vec4 m_worldpos0 = world_transform * vertex;
+	if (m_worldpos0.x < 1000) {
+		m_worldpos = m_worldpos0;
+	} else {
+		m_worldpos = vec4(m_worldpos0.x - 2000, m_worldpos0.y, m_worldpos0.z, m_worldpos0.w);
+	}
+	m_inmirror = m_worldpos0.x > 1000 ? -1 : 1;
+	position = projection_matrix * camera_inverse_matrix * m_worldpos;
 
 VERTEX_SHADER_CODE
 
@@ -573,6 +586,8 @@ VERTEX_SHADER_CODE
 /* clang-format off */
 [fragment]
 
+in vec4 m_worldpos;
+flat in float m_inmirror;
 
 /* texture unit usage, N is max_texture_unity-N
 
@@ -813,6 +828,11 @@ layout(std140) uniform ReflectionProbeData { //ubo:6
 	ReflectionData reflections[MAX_REFLECTION_DATA_STRUCTS];
 };
 uniform mediump sampler2D reflection_atlas; // texunit:-3
+
+layout(std140) uniform MirrorVertices { //ubo:7
+
+	vec4 mirror_verts[4];
+};
 
 #ifdef USE_FORWARD_LIGHTING
 
@@ -1609,6 +1629,12 @@ void gi_probes_compute(vec3 pos, vec3 normal, float roughness, inout vec3 out_sp
 #endif
 
 void main() {
+	
+	{
+		// near plane
+		vec3 normal0 = cross(mirror_verts[0].xyz - mirror_verts[1].xyz, mirror_verts[0].xyz - mirror_verts[2].xyz);
+		if ((dot(m_worldpos.xyz, normal0) < dot(mirror_verts[0].xyz, normal0)) != (m_inmirror < 0)) discard;
+	}
 
 #ifdef RENDER_DEPTH_DUAL_PARABOLOID
 
