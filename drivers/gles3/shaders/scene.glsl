@@ -1631,9 +1631,32 @@ void gi_probes_compute(vec3 pos, vec3 normal, float roughness, inout vec3 out_sp
 void main() {
 	
 	{
+		vec3 campos = (camera_matrix * vec4(0, 0, 0, 1)).xyz;
+
+		// Verts:
+		//
+		// 1 -- 2
+		// |    |
+		// 0 -- 3
+
+		bool outofmirror = false;
 		// near plane
 		vec3 normal0 = cross(mirror_verts[0].xyz - mirror_verts[1].xyz, mirror_verts[0].xyz - mirror_verts[2].xyz);
-		if ((dot(m_worldpos.xyz, normal0) < dot(mirror_verts[0].xyz, normal0)) != (m_inmirror < 0)) discard;
+		if (dot(m_worldpos.xyz, normal0) < dot(mirror_verts[0].xyz, normal0)) outofmirror = true;
+		// left plane
+		vec3 normal1 = cross(mirror_verts[0].xyz - mirror_verts[1].xyz, mirror_verts[0].xyz - campos);
+		if (dot(m_worldpos.xyz, normal1) < dot(mirror_verts[0].xyz, normal1)) outofmirror = true;
+		// right plane
+		vec3 normal2 = cross(mirror_verts[2].xyz - mirror_verts[3].xyz, mirror_verts[2].xyz - campos);
+		if (dot(m_worldpos.xyz, normal2) < dot(mirror_verts[2].xyz, normal2)) outofmirror = true;
+		// top plane
+		vec3 normal3 = cross(mirror_verts[1].xyz - mirror_verts[2].xyz, mirror_verts[2].xyz - campos);
+		if (dot(m_worldpos.xyz, normal3) < dot(mirror_verts[2].xyz, normal3)) outofmirror = true;
+		// bottom plane
+		vec3 normal4 = cross(mirror_verts[3].xyz - mirror_verts[0].xyz, mirror_verts[0].xyz - campos);
+		if (dot(m_worldpos.xyz, normal4) < dot(mirror_verts[0].xyz, normal4)) outofmirror = true;
+
+		if (outofmirror == (m_inmirror < 0)) discard;
 	}
 
 #ifdef RENDER_DEPTH_DUAL_PARABOLOID
