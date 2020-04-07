@@ -1004,6 +1004,12 @@ void Octree<T, use_pairs, AL>::_cull_convex(Octant *p_octant, _CullConvexData *p
 	if (*p_cull->result_idx == p_cull->result_max)
 		return; //pointless
 
+	// Create a duplicated frustum 2000 units away for the mirrored world
+	Plane cull_planes_dup[6];
+	for (int i = 0; i < p_cull->plane_count; i++) {
+		cull_planes_dup[i] = Plane(p_cull->planes[i].center() + Vector3(2000, 0, 0), p_cull->planes[i].normal);
+	}
+
 	if (!p_octant->elements.empty()) {
 
 		typename List<Element *, AL>::Element *I;
@@ -1017,7 +1023,7 @@ void Octree<T, use_pairs, AL>::_cull_convex(Octant *p_octant, _CullConvexData *p
 				continue;
 			e->last_pass = pass;
 
-			if (true || e->aabb.intersects_convex_shape(p_cull->planes, p_cull->plane_count)) {  // THIRDS for now, disable frustum culling
+			if (e->aabb.intersects_convex_shape(cull_planes_dup, p_cull->plane_count) || e->aabb.intersects_convex_shape(p_cull->planes, p_cull->plane_count)) {
 
 				if (*p_cull->result_idx < p_cull->result_max) {
 					p_cull->result_array[*p_cull->result_idx] = e->userdata;
@@ -1043,7 +1049,7 @@ void Octree<T, use_pairs, AL>::_cull_convex(Octant *p_octant, _CullConvexData *p
 				continue;
 			e->last_pass = pass;
 
-			if (true || e->aabb.intersects_convex_shape(p_cull->planes, p_cull->plane_count)) { // THIRDS for now, disable frustum culling
+			if (e->aabb.intersects_convex_shape(cull_planes_dup, p_cull->plane_count) || e->aabb.intersects_convex_shape(p_cull->planes, p_cull->plane_count)) {
 
 				if (*p_cull->result_idx < p_cull->result_max) {
 
@@ -1059,7 +1065,7 @@ void Octree<T, use_pairs, AL>::_cull_convex(Octant *p_octant, _CullConvexData *p
 
 	for (int i = 0; i < 8; i++) {
 
-		if (p_octant->children[i] && (true || p_octant->children[i]->aabb.intersects_convex_shape(p_cull->planes, p_cull->plane_count))) {  // THIRDS for now, disable frustum culling
+		if (p_octant->children[i] && (p_octant->children[i]->aabb.intersects_convex_shape(cull_planes_dup, p_cull->plane_count) || p_octant->children[i]->aabb.intersects_convex_shape(p_cull->planes, p_cull->plane_count))) {
 			_cull_convex(p_octant->children[i], p_cull);
 		}
 	}

@@ -2647,19 +2647,49 @@ void RasterizerSceneGLES3::_setup_environment(Environment *env, const CameraMatr
 		state.ubo_data.fog_height_max = env->fog_height_max;
 		state.ubo_data.fog_height_curve = env->fog_height_curve;
 
-		state.mirror_vertices[0].x = env->mirror_vertex0.x;
-		state.mirror_vertices[0].y = env->mirror_vertex0.y;
-		state.mirror_vertices[0].z = env->mirror_vertex0.z;
-		state.mirror_vertices[1].x = env->mirror_vertex1.x;
-		state.mirror_vertices[1].y = env->mirror_vertex1.y;
-		state.mirror_vertices[1].z = env->mirror_vertex1.z;
-		state.mirror_vertices[2].x = env->mirror_vertex2.x;
-		state.mirror_vertices[2].y = env->mirror_vertex2.y;
-		state.mirror_vertices[2].z = env->mirror_vertex2.z;
-		state.mirror_vertices[3].x = env->mirror_vertex3.x;
-		state.mirror_vertices[3].y = env->mirror_vertex3.y;
-		state.mirror_vertices[3].z = env->mirror_vertex3.z;
-		//printf("Mirror: %f %f %f\n", env->mirror_vertex0.x, env->mirror_vertex0.y, env->mirror_vertex0.z);
+		// Check if the environment has a mirror set.
+		if (
+			env->mirror_vertex0.x == 0 &&
+			env->mirror_vertex0.y == 0 &&
+			env->mirror_vertex0.z == 0 &&
+			env->mirror_vertex1.x == 0 &&
+			env->mirror_vertex1.y == 0 &&
+			env->mirror_vertex1.z == 0 &&
+			env->mirror_vertex2.x == 0 &&
+			env->mirror_vertex2.y == 0 &&
+			env->mirror_vertex2.z == 0 &&
+			env->mirror_vertex3.x == 0 &&
+			env->mirror_vertex3.y == 0 &&
+			env->mirror_vertex3.z == 0
+		) {
+			// Default mirror vertices that should essentially show the entire screen
+			state.mirror_vertices[0].x = 0;
+			state.mirror_vertices[0].y = 0;
+			state.mirror_vertices[0].z = 0;
+			state.mirror_vertices[1].x = 1;
+			state.mirror_vertices[1].y = 0;
+			state.mirror_vertices[1].z = 0;
+			state.mirror_vertices[2].x = 0;
+			state.mirror_vertices[2].y = 0;
+			state.mirror_vertices[2].z = 0;
+			state.mirror_vertices[3].x = 0;
+			state.mirror_vertices[3].y = 0;
+			state.mirror_vertices[3].z = 0;
+		} else {
+			state.mirror_vertices[0].x = env->mirror_vertex0.x;
+			state.mirror_vertices[0].y = env->mirror_vertex0.y;
+			state.mirror_vertices[0].z = env->mirror_vertex0.z;
+			state.mirror_vertices[1].x = env->mirror_vertex1.x;
+			state.mirror_vertices[1].y = env->mirror_vertex1.y;
+			state.mirror_vertices[1].z = env->mirror_vertex1.z;
+			state.mirror_vertices[2].x = env->mirror_vertex2.x;
+			state.mirror_vertices[2].y = env->mirror_vertex2.y;
+			state.mirror_vertices[2].z = env->mirror_vertex2.z;
+			state.mirror_vertices[3].x = env->mirror_vertex3.x;
+			state.mirror_vertices[3].y = env->mirror_vertex3.y;
+			state.mirror_vertices[3].z = env->mirror_vertex3.z;
+			//printf("Mirror: %f %f %f\n", env->mirror_vertex0.x, env->mirror_vertex0.y, env->mirror_vertex0.z);
+		}
 
 	} else {
 		state.ubo_data.bg_energy = 1.0;
